@@ -93,7 +93,7 @@ UPGM(une matrice de distances M de taille n×n){
 	retourner arbre;
 	
 	FIN
-// STRUCTURES A MODIF ==================================================
+// STRUCTURES ==========================================================
 // TP2:
 typedef struct Maillon Maillon;
 typedef struct Liste Liste;
@@ -119,7 +119,7 @@ typedef struct Arbre {
     Noeud *racine;
 } Arbre;
 
-// INCLUDE A FAIRE =====================================================
+// INCLUDE =============================================================
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -138,6 +138,7 @@ Arbre *nouvel_arbre() {
     arbre->racine=NULL;
     return arbre;
 }
+
 // ===================================================
 //nouveau_noeud (TP3)
 /* Cree un nouveau noeud et renvoie un pointeur vers ce noeud */
