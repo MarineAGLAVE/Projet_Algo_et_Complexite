@@ -67,7 +67,7 @@ UPGM(une matrice de distances M de taille n×n){
 	
 	arbre = nouvel_arbre();
 	racines = nouvelle_liste();
-	// Création des feuilles de l’arbre
+	// Création des feuilles de l’arbre <-> liste de pointeurs pointant vers les noeuds/feuilles
 	for (i=0, i<=n-1, i++){
 		nœudi = nouveau_noeud(i);
 		ajout_element_fin(racines, nœudi);
@@ -77,8 +77,8 @@ UPGM(une matrice de distances M de taille n×n){
 		(i,j) := position de la plus petite valeur de M;
 		// Création du nouveau nœud nœudn+k
 		nœudn+k = nouveau_noeud(n+k);
-		nœudn+k→gauche = Element(racines,i);
-		nœudn+k→droit = Element(racines,j);
+		nœudn+k->gauche = Element(racines,i);
+		nœudn+k->droit = Element(racines,j);
 		ajout_element_fin(racines,nœudn+k);
 		// Mise `a jour de M avec le nouveau nœud
 		M = mise_a_jour(M,n-k,i,j);
@@ -87,9 +87,9 @@ UPGM(une matrice de distances M de taille n×n){
 	}
 	
 	root = nouveau_noeud(n+k);
-	root→gauche = Element(racines, 0);
-	root→droit =  Element(racines, 1);
-	arbre→racine = root;
+	root->gauche = Element(racines, 0);
+	root->droit =  Element(racines, 1);
+	arbre->racine = root;
 	retourner arbre;
 	
 	FIN
@@ -100,7 +100,7 @@ typedef struct Liste Liste;
 
 struct Maillon {
     Maillon *suivant;
-    int valeur;
+    Maillon *noeud; //J'ai modif ici pour que ça pointe sur le noeud
 };
 
 struct Liste {
@@ -119,11 +119,10 @@ typedef struct Arbre {
     Noeud *racine;
 } Arbre;
 
-// INCLUDE A FAIRE ===================================================
+// INCLUDE A FAIRE =====================================================
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "liste.h"
 
 // FONCTIONS A FAIRE ===================================================
 
@@ -145,7 +144,7 @@ Arbre *nouvel_arbre() {
 Noeud *nouveau_noeud(int val) {
     
     Noeud *noeud=(Noeud *) malloc(sizeof(noeud));
-    if(noeud==NULL)     //if pas de noeud
+    if(noeud==NULL)     //si pas de noeud
     {
         fprintf(stderr,"ERREUR ALLOCATION NOEUD.\n");
         exit(1);
@@ -162,7 +161,7 @@ Noeud *nouveau_noeud(int val) {
 /* crée une nouvelle liste */
 Liste *nouvelle_liste() {
     Liste *liste=(Liste *) malloc(sizeof(liste));
-    if(liste==NULL)     //if(!liste)
+    if(liste==NULL)     //<-> if(!liste) si pas de liste
     {
         fprintf(stderr,"ERREUR ALLOCATION LISTE.\n");
         exit(1);
@@ -170,7 +169,21 @@ Liste *nouvelle_liste() {
     liste->tete=NULL;
     return liste;
 }
-
+// ===================================================
+//~ //nouveau_maillon
+//~ /* crée un nouveau maillon qui a pour valeur l'entier val */
+//~ Maillon *nouveau_maillon(int val) {
+    //~ Maillon *maillon=(Maillon *) malloc(sizeof(maillon));
+    //~ if(maillon==NULL)     //if(!maillon)
+    //~ {
+        //~ fprintf(stderr,"ERREUR ALLOCATION MAILLON.\n");
+        //~ exit(1);
+    //~ }
+    //~ maillon->suivant=NULL;
+    //~ maillon->valeur=val;
+    
+    //~ return maillon;
+//~ }
 // ===================================================
 //ajout_element_fin (TP2)
 /* ajoute un élément de valeur val à la fin de la liste */
@@ -187,20 +200,38 @@ void ajout_element_fin(Liste *L, int val) {
             p=p->suivant;
         }
         p->suivant=q;
-        
     }
 }
 
 // ===================================================
-//supp_element (TP2) (à adapter pour que  lespositions commencent à 0 et non à 1)
+//supp_element (TP2) (à adapter pour que les positions commencent à 0 et non à 1)
 /* supprime le k-ième élément de la liste (on suppose que la première place est
  * 1); si c'est possible, on modifie la liste et on renvoie la valeur 1; sinon,
  * on ne modifie pas la liste et on renvoie la valeur 0 */
 int supp_element(Liste *L, int k) {
-    return 0;
+    Maillon *P1 = L->tete;
+    if (k==0){
+		L->tete = NULL;               // Je l'ai adapté pour que les positions commencent à 0
+		free(P1);                     //A TESTER!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	}
+	else{
+		i=0;
+		while(i<=k-2)&&(p->suivant!=NULL){
+			P1=P1->suivant;
+			i++;
+		}
+		Maillon *P2 = P1->suivant;
+		P1 = P2->suivant;
+		free(P2);
+	}
 }
 
 // ===================================================
 //Element (L:liste chaînée (IN), i:entier (IN), OUT: noeud pointé par iième maillon de L ou NULL s'il n'existe pas)
+
 // ===================================================
 //mise_a_jour (M: matrice de distance(IN), OUT: nouvelle matrice de distance)
+
+// ===================================================
+//fonction recherche de la position de la plus petite valeur de la matrice M (M:matrice (IN), OUT:(i,j))
+
